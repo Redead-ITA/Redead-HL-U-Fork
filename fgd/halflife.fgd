@@ -1169,7 +1169,7 @@
 	_minlight(string) : "Minimum light level"
 ]
 
-@SolidClass base(Global, RenderFields, ZHLT) = func_healthcharger: "Wall health recharger" 
+@SolidClass base(Global, Target, RenderFields, ZHLT) = func_healthcharger: "Wall health recharger" 
 [
 	// dmdelay(integer) : "Deathmatch recharge delay" : 0
 	_minlight(string) : "Minimum light level"
@@ -1264,7 +1264,7 @@
 	_minlight(string) : "Minimum light level"
 ]
 
-@SolidClass base(Global,RenderFields, ZHLT) = func_recharge: "Battery recharger" 
+@SolidClass base(Global, Target,RenderFields, ZHLT) = func_recharge: "Battery recharger" 
 [
 	// dmdelay(integer) : "Deathmatch recharge delay" : 0
 	_minlight(string) : "Minimum light level"
@@ -1687,6 +1687,7 @@
 	spawnflags(Flags) =
 	[
 		1 : "Short Logon" : 0
+		2 : "No Logon" : 0
 	]
 ]
 

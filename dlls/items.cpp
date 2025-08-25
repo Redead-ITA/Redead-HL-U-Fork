@@ -167,6 +167,7 @@ void CItem::Materialize()
 }
 
 #define SF_SUIT_SHORTLOGON 0x0001
+#define SF_SUIT_NOLOGON 0x0002
 
 class CItemSuit : public CItem
 {
@@ -184,11 +185,16 @@ class CItemSuit : public CItem
 	{
 		if (pPlayer->HasSuit())
 			return false;
-
-		if ((pev->spawnflags & SF_SUIT_SHORTLOGON) != 0)
-			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_A0"); // short version of suit logon,
+		if ((pev->spawnflags & SF_SUIT_NOLOGON) == 0) // As long as the mapper wants to hear the log on.
+		{
+			if ((pev->spawnflags & SF_SUIT_SHORTLOGON) != 0)
+				EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_A0"); // short version of suit logon,
+			else
+				EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx"); // long version of suit logon
+		}
 		else
-			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx"); // long version of suit logon
+			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_B0"); //Just the Bell
+		
 
 		pPlayer->SetHasSuit(true);
 		return true;
