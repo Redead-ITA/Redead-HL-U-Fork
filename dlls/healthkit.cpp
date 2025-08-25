@@ -190,6 +190,8 @@ void CWallHealth::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE us
 	// if there is no juice left, turn it off
 	if (m_iJuice <= 0)
 	{
+		if (m_iOn > 1)
+			SUB_UseTargets(pActivator, USE_OFF, 0);
 		pev->frame = 1;
 		Off();
 	}

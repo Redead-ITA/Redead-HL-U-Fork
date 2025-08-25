@@ -286,6 +286,7 @@ void CZombie::Spawn()
 	m_afCapability = bits_CAP_DOORS_GROUP;
 
 	MonsterInit();
+
 }
 
 //=========================================================
