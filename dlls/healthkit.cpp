@@ -65,7 +65,7 @@ void CHealthKit::Precache()
 
 bool CHealthKit::MyTouch(CBasePlayer* pPlayer)
 {
-	if (pPlayer->pev->deadflag != DEAD_NO)
+	if (pPlayer->pev->deadflag != DEAD_NO || pPlayer->pev->health >= PLAYER_MAX_NORMAL_HEALTH)
 	{
 		return false;
 	}
@@ -99,6 +99,9 @@ bool CHealthKit::MyTouch(CBasePlayer* pPlayer)
 //-------------------------------------------------------------
 // Wall mounted health kit
 //-------------------------------------------------------------
+
+#define WH_OVERHEAL 0x0001 //Can the Wallhealth overheal the player?
+
 class CWallHealth : public CBaseToggle
 {
 public:
@@ -196,8 +199,8 @@ void CWallHealth::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE us
 		Off();
 	}
 
-	// if the player doesn't have the suit, or there is no juice left, make the deny noise
-	if ((m_iJuice <= 0) || !player->HasSuit())
+	// if it has no juice, or it has more than their default, play a deny sound.
+	if ((m_iJuice <= 0) || (player->pev->health >= PLAYER_MAX_NORMAL_HEALTH && (pev->spawnflags & WH_OVERHEAL) == 0) || player->pev->health == PLAYER_MAX_OVERHEAL_HEALTH)
 	{
 		if (m_flSoundTime <= gpGlobals->time)
 		{

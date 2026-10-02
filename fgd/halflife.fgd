@@ -1173,6 +1173,11 @@
 [
 	// dmdelay(integer) : "Deathmatch recharge delay" : 0
 	_minlight(string) : "Minimum light level"
+	spawnflags(flags) =
+	[
+		1: "Heal beyond 100" : 0
+	]
+	
 ]
 
 @SolidClass base(Targetname, RenderFields, ZHLT) = func_illusionary : "Fake Wall/Light" 
@@ -1268,6 +1273,10 @@
 [
 	// dmdelay(integer) : "Deathmatch recharge delay" : 0
 	_minlight(string) : "Minimum light level"
+	spawnflags(flags) =
+	[
+		1: "Charge beyond 100" : 0
+	]
 ]
 
 @SolidClass base(Targetname, Global, RenderFields, Angles, ZHLT) = func_rot_button : "RotatingButton" 

@@ -27,6 +27,9 @@
 #include "player.h"
 #include "skill.h"
 #include "gamerules.h"
+#include "weapons.h" //I am doing this for the sake of having the max defined.
+
+#define WR_OVERHEAL 0x0001 // Can the WallRecharge overcharge the player?
 
 class CRecharge : public CBaseToggle
 {
@@ -123,8 +126,10 @@ void CRecharge::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useT
 		
 	}
 
-	// if the player doesn't have the suit, or there is no juice left, make the deny noise
-	if ((m_iJuice <= 0) || !player->HasSuit())
+	// if the player doesn't have the suit, or there is no juice left, 
+	if ((m_iJuice <= 0) || !player->HasSuit() || 
+		(player->pev->armorvalue > MAX_NORMAL_BATTERY && (pev->spawnflags & WR_OVERHEAL) == 0) || 
+		player->pev->armorvalue == MAX_OVERCHARGE_BATTERY) //or it has more than a 100 suit charge, or has the max amount of suit juice it can have, make the deny noise
 	{
 		if (m_flSoundTime <= gpGlobals->time)
 		{
@@ -168,15 +173,20 @@ void CRecharge::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useT
 		EMIT_SOUND(ENT(pev), CHAN_STATIC, "items/suitcharge1.wav", 0.85, ATTN_NORM);
 	}
 
+	int maxcharge;
+	if ((pev->spawnflags & WR_OVERHEAL) != 0) 
+		maxcharge = MAX_OVERCHARGE_BATTERY;
+	else
+		maxcharge = MAX_NORMAL_BATTERY;
 
 	// charge the player
-	if (m_hActivator->pev->armorvalue < 100)
+	if (m_hActivator->pev->armorvalue < maxcharge)
 	{
 		m_iJuice--;
 		m_hActivator->pev->armorvalue += 1;
 
-		if (m_hActivator->pev->armorvalue > 100)
-			m_hActivator->pev->armorvalue = 100;
+		if (m_hActivator->pev->armorvalue > maxcharge)
+			m_hActivator->pev->armorvalue = maxcharge;
 	}
 
 	// govern the rate of charge

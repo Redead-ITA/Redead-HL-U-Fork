@@ -184,7 +184,34 @@ class CItemSuit : public CItem
 	bool MyTouch(CBasePlayer* pPlayer) override
 	{
 		if (pPlayer->HasSuit())
-			return false;
+		{
+			int pct;
+			char szcharge[64];
+
+			pPlayer->pev->armorvalue += MAX_NORMAL_BATTERY;
+			pPlayer->pev->armorvalue = V_min(pPlayer->pev->armorvalue, MAX_OVERCHARGE_BATTERY);
+
+			EMIT_SOUND(pPlayer->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM);
+
+			MESSAGE_BEGIN(MSG_ONE, gmsgItemPickup, NULL, pPlayer->pev); //I probably should change it to have it's own icon but we can only see.
+			WRITE_STRING("CItemBattery");
+			MESSAGE_END();
+
+
+			// Suit reports new power level
+			if (pPlayer->pev->armorvalue <= MAX_NORMAL_BATTERY) //Suit pickup gives a 100 charge regardless so This just means to do normal calculations
+				pct = 19;
+			else if (pPlayer->pev->armorvalue >= MAX_OVERCHARGE_BATTERY) //Suit is at the max of 200
+				pct = 21;
+			else //Suit gets above a 100 but it's less than 200
+				pct = 20;
+
+			sprintf(szcharge, "!HEV_%1dP", pct);
+			pPlayer->SetSuitUpdate(szcharge, false, SUIT_NEXT_IN_30SEC);
+			return true;
+		
+		}
+
 		if ((pev->spawnflags & SF_SUIT_NOLOGON) == 0) // As long as the mapper wants to hear the log on.
 		{
 			if ((pev->spawnflags & SF_SUIT_SHORTLOGON) != 0)
